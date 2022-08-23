@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7E6C889-D97E-4AC8-9463-AAAE3E104053}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.Validation", "src\BA.Roslyn.Validation\BA.Roslyn.Validation.csproj", "{95FA9BA2-68FD-4921-8322-495E803D0CE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.Validation.Tests", "src\BA.Roslyn.Validation.Tests\BA.Roslyn.Validation.Tests.csproj", "{B622A078-6D55-4B23-A913-B6ABE48B0D23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.CodeBlocks", "src\BA.Roslyn.CodeBlocks\BA.Roslyn.CodeBlocks.csproj", "{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.CodeBlocks.Tests", "src\BA.Roslyn.CodeBlocks.Tests\BA.Roslyn.CodeBlocks.Tests.csproj", "{FB75BD04-E605-4A22-B3A1-AEBFF0926559}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95FA9BA2-68FD-4921-8322-495E803D0CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95FA9BA2-68FD-4921-8322-495E803D0CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95FA9BA2-68FD-4921-8322-495E803D0CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95FA9BA2-68FD-4921-8322-495E803D0CE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B622A078-6D55-4B23-A913-B6ABE48B0D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B622A078-6D55-4B23-A913-B6ABE48B0D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B622A078-6D55-4B23-A913-B6ABE48B0D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B622A078-6D55-4B23-A913-B6ABE48B0D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB75BD04-E605-4A22-B3A1-AEBFF0926559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB75BD04-E605-4A22-B3A1-AEBFF0926559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB75BD04-E605-4A22-B3A1-AEBFF0926559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB75BD04-E605-4A22-B3A1-AEBFF0926559}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{95FA9BA2-68FD-4921-8322-495E803D0CE3} = {A7E6C889-D97E-4AC8-9463-AAAE3E104053}
+		{B622A078-6D55-4B23-A913-B6ABE48B0D23} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
+		{C5DA3ACF-9E80-4049-A752-63BD3B4E2A0D} = {A7E6C889-D97E-4AC8-9463-AAAE3E104053}
+		{FB75BD04-E605-4A22-B3A1-AEBFF0926559} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27E887C4-1106-402A-837A-0CA3CE9B61A0}
+	EndGlobalSection
+EndGlobal
