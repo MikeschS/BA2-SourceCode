@@ -16,7 +16,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -172,7 +172,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -295,7 +295,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttributes""
 			},
@@ -352,7 +352,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -425,7 +425,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -494,7 +494,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -567,7 +567,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},

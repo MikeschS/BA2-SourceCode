@@ -45,7 +45,7 @@ namespace BA.Roslyn.AttributeRules.Configuration
 
             AttributeRuleBaseConfig config = type switch
             {
-                RuleType.BaseClass => JsonSerializer.Deserialize<BaseClassRuleConfig>(ref reader)!,
+                RuleType.ClassRequiresAttribute => JsonSerializer.Deserialize<ClassRequiresAttributeRuleConfig>(ref reader)!,
                 _ => throw new JsonException()
             };
             return config;

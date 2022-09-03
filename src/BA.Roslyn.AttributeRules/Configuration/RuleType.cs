@@ -6,6 +6,6 @@ namespace BA.Roslyn.AttributeRules.Configuration
 {
     public enum RuleType
     {
-        BaseClass = 1,
+        ClassRequiresAttribute = 1,
     }
 }

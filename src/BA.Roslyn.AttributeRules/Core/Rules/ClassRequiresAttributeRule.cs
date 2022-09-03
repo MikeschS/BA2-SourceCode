@@ -6,13 +6,13 @@ using System.Text;
 
 namespace BA.Roslyn.AttributeRules.Core.Rules
 {
-    internal class BaseClassRule : IRule
+    internal class ClassRequiresAttributeRule : IRule
     {
         private INamedTypeSymbol selector;
         private INamedTypeSymbol requiredAttributeClass;
         private bool analyzeabstractClasses;
 
-        public BaseClassRule(INamedTypeSymbol selector, INamedTypeSymbol requiredAttributeClass)
+        public ClassRequiresAttributeRule(INamedTypeSymbol selector, INamedTypeSymbol requiredAttributeClass)
         {
             this.selector = selector;
             this.requiredAttributeClass = requiredAttributeClass;
@@ -20,7 +20,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
 
         public SymbolKind TargetSymbolKind => SymbolKind.NamedType;
 
-        public BaseClassRule WithAnalyzeAbstractClasses(bool analyzeAbstractClasses)
+        public ClassRequiresAttributeRule WithAnalyzeAbstractClasses(bool analyzeAbstractClasses)
         {
             this.analyzeabstractClasses = analyzeAbstractClasses;
             return this;

@@ -40,7 +40,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
@@ -72,7 +72,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeTypeName"" : ""AttributeRules.Test.RequiredAttribute"",
 			""BaseClassTypeName"" : ""AttributeRules.Test.MyCommand""
 		}
@@ -92,7 +92,7 @@ namespace Powermatch2.Application.Analyzers.Test
 @"{
 	""Rules"" : {
 		""TestRule"" : {
-			""Type"" : ""BaseClass"",
+			""Type"" : ""ClassRequiresAttribute"",
 			""AttributeTypeName"" : ""AttributeRules.Test.RequiredAttribute""
 	}
 }");

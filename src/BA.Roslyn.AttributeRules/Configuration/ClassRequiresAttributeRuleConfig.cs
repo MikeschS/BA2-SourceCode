@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BA.Roslyn.AttributeRules.Configuration
 {
-    internal class BaseClassRuleConfig : AttributeRuleBaseConfig
+    internal class ClassRequiresAttributeRuleConfig : AttributeRuleBaseConfig
     {
         public TypeSpecificationConfig Selector { get; set; } = null!;
 
@@ -40,7 +40,7 @@ namespace BA.Roslyn.AttributeRules.Configuration
                 return RuleBuildResult.Fail("Attribute type is not a class");
             }
 
-            var rule = new BaseClassRule(selector, attributeClass).WithAnalyzeAbstractClasses(AnalyzeAbstractClasses);
+            var rule = new ClassRequiresAttributeRule(selector, attributeClass).WithAnalyzeAbstractClasses(AnalyzeAbstractClasses);
 
             return RuleBuildResult.Success(rule);
         }
