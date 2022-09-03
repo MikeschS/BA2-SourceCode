@@ -8,16 +8,16 @@ namespace BA.Roslyn.AttributeRules.Configuration
 {
     internal class BaseClassRuleConfig : AttributeRuleBaseConfig
     {
-        public string BaseClassTypeName { get; set; } = null!;
+        public TypeSpecificationConfig BaseClassType { get; set; } = null!;
 
-        public string AttributeTypeName { get; set; } = null!;
+        public TypeSpecificationConfig AttributeType { get; set; } = null!;
 
         public bool AnalyzeAbstractClasses { get; set; } = false;
 
         internal override RuleBuildResult BuildRule(string name, Compilation compilation)
         {
-            var baseClass = compilation.GetTypeByMetadataName(BaseClassTypeName);
-            var attributeClass = compilation.GetTypeByMetadataName(AttributeTypeName);
+            var baseClass = BaseClassType.Build(compilation);
+            var attributeClass = AttributeType.Build(compilation);
 
             if (baseClass == null)
             {

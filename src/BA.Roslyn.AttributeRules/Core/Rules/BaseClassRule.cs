@@ -28,6 +28,11 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
 
         public RuleResult Check(ISymbol symbol)
         {
+            if (symbol.Kind != TargetSymbolKind)
+            {
+                return RuleResult.Success();
+            }
+
             var typeSymbol = symbol as INamedTypeSymbol;
 
             if (typeSymbol == null)
@@ -58,20 +63,45 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
         private bool HasTransientBase(INamedTypeSymbol typeSymbol, INamedTypeSymbol baseSymbol)
         {
             var currentSymbol = typeSymbol;
-
-            while (currentSymbol != null)
+            try
             {
-                if (currentSymbol.BaseType == null)
-                {
-                    return false;
-                }
 
-                if (SymbolEqualityComparer.Default.Equals(currentSymbol.BaseType, baseSymbol))
-                {
-                    return true;
-                }
 
-                currentSymbol = currentSymbol.BaseType;
+                while (currentSymbol != null)
+                {
+                    if (currentSymbol.BaseType == null)
+                    {
+                        return false;
+                    }
+
+                    if (baseSymbol.IsUnboundGenericType)
+                    {
+                        var tempComparer = currentSymbol.BaseType;
+
+                        if (tempComparer.Arity > 0)
+                        {
+                            tempComparer = tempComparer.ConstructUnboundGenericType();
+                        }
+
+                        if (SymbolEqualityComparer.Default.Equals(tempComparer, baseSymbol))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (SymbolEqualityComparer.Default.Equals(currentSymbol.BaseType, baseSymbol))
+                        {
+                            return true;
+                        }
+                    }
+
+                    currentSymbol = currentSymbol.BaseType;
+                }
+            }
+            catch (Exception e)
+            {
+
             }
 
             return false;

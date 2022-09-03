@@ -26,7 +26,7 @@ namespace BA.Roslyn.AttributeRules.Tests.Verifiers
 			public Test(IEnumerable<string> sources, AdditionalDocument? additionalDocument = null)
 			{
 				ReferenceAssemblies = Net.Net60;
-                // TestState.AdditionalReferences.Add(typeof(RoleRequirementAttribute).Assembly);
+                // TestState.AdditionalReferences.Add(typeof(System.Boolean).Assembly);
 
                 foreach (var source in sources)
                 {
