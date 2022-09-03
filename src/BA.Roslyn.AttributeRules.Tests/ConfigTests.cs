@@ -41,8 +41,12 @@ namespace Powermatch2.Application.Analyzers.Test
 	""Rules"" : {
 		""TestRule"" : {
 			""Type"" : ""BaseClass"",
-			""AttributeTypeName"" : ""AttributeRules.Test.RequiredAttribute"",
-			""BaseClassTypeName"" : ""AttributeRules.Test.MyCommand""
+			""AttributeType"": {
+				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
+			},
+			""Selector"" : {
+				""TypeName"" : ""AttributeRules.Test.MyCommand""
+			}
 		}
 	}
 }");

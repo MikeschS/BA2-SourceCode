@@ -20,7 +20,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
-			""BaseClassType"" : {
+			""Selector"" : {
 				""TypeName"" : ""AttributeRules.Test.MyCommand""
 			}
 		}
@@ -176,7 +176,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
-			""BaseClassType"" : {
+			""Selector"" : {
 				""TypeName"" : ""AttributeRules.Test.MyCommand""
 			},
 			""AnalyzeAbstractClasses"" : true
@@ -299,7 +299,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttributes""
 			},
-			""BaseClassType"" : {
+			""Selector"" : {
 				""TypeName"" : ""AttributeRules.Test.MyCommand""
 			}
 		}
@@ -356,7 +356,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
-			""BaseClassType"" : {
+			""Selector"" : {
 				""TypeName"" : ""AttributeRules.Test.MyCommand`1"",
 				""TypeArguments"" : [
 					{
@@ -429,7 +429,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			""AttributeType"": {
 				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
 			},
-			""BaseClassType"" : {
+			""Selector"" : {
 				""TypeName"" : ""AttributeRules.Test.MyCommand`1""
 			}
 		}
@@ -482,6 +482,148 @@ namespace Powermatch2.Application.Analyzers.Test
 
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { matchTestCase, noMatchTestCase, baseClass, requiredAttribute },
+				invalidConfig,
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));
+		}
+
+		[Fact]
+		public async Task NotifiesWhenSearchingForGenericInterface()
+		{
+			AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
+@"{
+	""Rules"" : {
+		""TestRule"" : {
+			""Type"" : ""BaseClass"",
+			""AttributeType"": {
+				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
+			},
+			""Selector"" : {
+				""TypeName"" : ""AttributeRules.Test.IMyInterface`1"",
+				""TypeArguments"" : [
+					{
+						""TypeName"" : ""System.String""
+					}
+				]
+			}
+		}
+	}
+}");
+
+			var matchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class MatchTestCommand : IMyInterface<string>
+	{
+	}
+}";
+
+			var noMatchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class NoMatchTestCommand : IMyInterface<int>
+	{
+	}
+}";
+
+			var @interface =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public interface IMyInterface<T>
+	{
+	}
+}";
+
+			var requiredAttribute =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class RequiredAttribute : Attribute
+	{
+	}
+}";
+
+			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
+				new string[] { matchTestCase, noMatchTestCase, @interface, requiredAttribute },
+				invalidConfig,
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"));
+		}
+
+		[Fact]
+		public async Task NotifiesWhenSearchingForUnboundGenericInterface()
+		{
+			AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
+@"{
+	""Rules"" : {
+		""TestRule"" : {
+			""Type"" : ""BaseClass"",
+			""AttributeType"": {
+				""TypeName"" : ""AttributeRules.Test.RequiredAttribute""
+			},
+			""Selector"" : {
+				""TypeName"" : ""AttributeRules.Test.IMyInterface`1""
+			}
+		}
+	}
+}");
+
+			var matchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class MatchTestCommand : IMyInterface<string>
+	{
+	}
+}";
+
+			var noMatchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class NoMatchTestCommand : IMyInterface<int>
+	{
+	}
+}";
+
+			var @interface =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public interface IMyInterface<T>
+	{
+	}
+}";
+
+			var requiredAttribute =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class RequiredAttribute : Attribute
+	{
+	}
+}";
+
+			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
+				new string[] { matchTestCase, noMatchTestCase, @interface, requiredAttribute },
 				invalidConfig,
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));

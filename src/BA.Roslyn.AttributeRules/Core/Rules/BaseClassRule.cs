@@ -8,13 +8,13 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
 {
     internal class BaseClassRule : IRule
     {
-        private INamedTypeSymbol baseClass;
+        private INamedTypeSymbol selector;
         private INamedTypeSymbol requiredAttributeClass;
         private bool analyzeabstractClasses;
 
-        public BaseClassRule(INamedTypeSymbol baseClass, INamedTypeSymbol requiredAttributeClass)
+        public BaseClassRule(INamedTypeSymbol selector, INamedTypeSymbol requiredAttributeClass)
         {
-            this.baseClass = baseClass;
+            this.selector = selector;
             this.requiredAttributeClass = requiredAttributeClass;
         }
 
@@ -45,7 +45,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
                 return RuleResult.Success();
             }
 
-            if (!HasTransientBase(typeSymbol, baseClass))
+            if (!MatchesSelector(typeSymbol, selector))
             {
                 return RuleResult.Success();
             }
@@ -60,14 +60,39 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             return RuleResult.Fail($"Class misses the {requiredAttributeClass.Name} attribute");
         }
 
-        private bool HasTransientBase(INamedTypeSymbol typeSymbol, INamedTypeSymbol baseSymbol)
+        private bool MatchesSelector(INamedTypeSymbol typeSymbol, INamedTypeSymbol baseSymbol)
         {
             var currentSymbol = typeSymbol;
-            try
+            while (currentSymbol != null)
             {
+                if (selector.TypeKind == TypeKind.Interface)
+                {
+                    foreach (var @interface in currentSymbol.AllInterfaces)
+                    {
+                        if (baseSymbol.IsUnboundGenericType)
+                        {
+                            var tempComparer = @interface;
 
+                            if (tempComparer.Arity > 0)
+                            {
+                                tempComparer = tempComparer.ConstructUnboundGenericType();
+                            }
 
-                while (currentSymbol != null)
+                            if (SymbolEqualityComparer.Default.Equals(tempComparer, baseSymbol))
+                            {
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            if (SymbolEqualityComparer.Default.Equals(@interface, baseSymbol))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                else if (selector.TypeKind == TypeKind.Class)
                 {
                     if (currentSymbol.BaseType == null)
                     {
@@ -95,13 +120,9 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
                             return true;
                         }
                     }
-
-                    currentSymbol = currentSymbol.BaseType;
                 }
-            }
-            catch (Exception e)
-            {
 
+                currentSymbol = currentSymbol.BaseType;
             }
 
             return false;
