@@ -1,5 +1,6 @@
 ﻿namespace BA.Roslyn.AttributeRules.Tests.Verifiers
 {
+	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Microsoft.CodeAnalysis;
@@ -24,12 +25,18 @@
 			=> CSharpAnalyzerVerifier<TAnalyzer, XUnitVerifier>.Diagnostic(descriptor);
 
 		/// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.VerifyAnalyzerAsync(string, DiagnosticResult[])"/>
-		public static async Task VerifyAnalyzerAsync(IEnumerable<string> sources, AdditionalDocument? additionalDocument, params DiagnosticResult[] expected)
+		public static async Task VerifyAnalyzerAsync(IEnumerable<string> sources, AdditionalDocument? additionalDocument, IEnumerable<DiagnosticResult>? expected = null, IEnumerable<Assembly>? references = null)
 		{
 			var test = new Test(sources, additionalDocument);
+
+			foreach (var reference in references ?? new Assembly[0])
+			{
+                test.TestState.AdditionalReferences.Add(reference);
+            }
+
 
 			test.ExpectedDiagnostics.AddRange(expected);
 			await test.RunAsync(CancellationToken.None);
 		}
-	}
+    }
 }

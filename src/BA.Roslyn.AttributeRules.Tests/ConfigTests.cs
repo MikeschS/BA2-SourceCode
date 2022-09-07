@@ -8,6 +8,7 @@ namespace Powermatch2.Application.Analyzers.Test
     using System.Threading.Tasks;
     using BA.Roslyn.AttributeRules;
     using BA.Roslyn.AttributeRules.Tests.Verifiers;
+	using Microsoft.CodeAnalysis.Testing;
 	using Xunit;
 
 	public class Tests
@@ -62,7 +63,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { attributeSource, baseSource }, 
 				null,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.MissingRuleConfigFile));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.MissingRuleConfigFile)});
 		}
 
 		[Fact]
@@ -82,7 +84,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { attributeSource, baseSource },
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.MissingRuleConfigFile));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.MissingRuleConfigFile)});
 		}
 
 		[Fact]
@@ -100,7 +103,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { attributeSource, baseSource },
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfigJson).WithArguments("Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 6 | BytePositionInLine: 1."));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfigJson).WithArguments("Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 6 | BytePositionInLine: 1.")});
 		}
 	}
 }

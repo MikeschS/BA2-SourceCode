@@ -5,9 +5,11 @@
 namespace Powermatch2.Application.Analyzers.Test
 {
     using System.ComponentModel;
-    using System.Threading.Tasks;
+	using System.Threading.Tasks;
     using BA.Roslyn.AttributeRules;
-    using BA.Roslyn.AttributeRules.Tests.Verifiers;
+	using BA.Roslyn.AttributeRules.Tests.Rules;
+	using BA.Roslyn.AttributeRules.Tests.Verifiers;
+	using Microsoft.CodeAnalysis.Testing;
 	using Xunit;
 
 	public class BaseClassTests
@@ -66,7 +68,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] {  testCase, baseClass, requiredAttribute }, 
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -161,8 +164,9 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { testCase, intermediateClass, baseClass, requiredAttribute },
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"),
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 32).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"),
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 32).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -231,8 +235,9 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { testCase, intermediateClass, baseClass, requiredAttribute },
 				configWithAbstractClasses,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"),
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 24, 6, 41).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"),
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 24, 6, 41).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -285,7 +290,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { testCase, intermediateClass, baseClass, requiredAttribute },
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 26).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -342,7 +348,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { testCase, baseClass, requiredAttribute },
 				invalidConfig,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfig).WithArguments("Attribute class was not found"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfig).WithArguments("Attribute class was not found")});
 		}
 
 		[Fact]
@@ -415,7 +422,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { matchTestCase, noMatchTestCase, baseClass, requiredAttribute },
 				invalidConfig,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -483,8 +491,9 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { matchTestCase, noMatchTestCase, baseClass, requiredAttribute },
 				invalidConfig,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -557,7 +566,8 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { matchTestCase, noMatchTestCase, @interface, requiredAttribute },
 				invalidConfig,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"));
+                new DiagnosticResult[] {
+                CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
 		[Fact]
@@ -625,41 +635,66 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { matchTestCase, noMatchTestCase, @interface, requiredAttribute },
 				invalidConfig,
+				new DiagnosticResult[] {
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute")});
 		}
 
         [Fact]
         public async Task ZZZZLastTest()
         {
             AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
-@"SymbolKind = Microsoft.CodeAnalysis.SymbolKind.NamedType;
+@"using BA.Roslyn.AttributeRules.Tests.Rules;
 
-RuleDelegate = context => 
+AddRule(new MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Test.RequiredAttribute"", true));");
+
+            var testCase =
+            @"namespace AttributeRules.Test
 {
-	var symbol = context.Symbol as INamedTypeSymbol;
+	using System;
+	using System.Threading.Tasks;
 
-	if(symbol.Name.Contains(""Test""))
+	public class TestCommand : IntermediateClass
 	{
-		context.EmitMessage(""Fuck this shit."");
 	}
-};
-");
+}";
 
-            var matchTestCase =
+            var intermediateClass =
 @"namespace AttributeRules.Test
 {
 	using System;
 	using System.Threading.Tasks;
 
-	public class MatchTestCommand
+	public abstract class IntermediateClass : MyCommand
+	{
+	}
+}";
+
+            var baseClass =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public abstract class MyCommand
+	{
+	}
+}";
+
+            var requiredAttribute =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class RequiredAttribute : Attribute
 	{
 	}
 }";
 
             await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
-                new string[] { matchTestCase },
-                invalidConfig);
+			new string[] { testCase, intermediateClass, baseClass, requiredAttribute },
+                invalidConfig, Array.Empty<DiagnosticResult>(), new[] { typeof(MyCustomRule).Assembly } );
         }
     }
 }

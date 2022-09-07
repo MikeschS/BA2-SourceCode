@@ -1,4 +1,5 @@
-﻿using BA.Roslyn.AttributeRules.Core.Rules;
+﻿using BA.Roslyn.AttributeRules.Abstractions;
+using BA.Roslyn.AttributeRules.Core.Rules;
 using System;
 using System.Collections.Generic;
 using System.Text;

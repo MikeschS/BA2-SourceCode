@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,14 +7,6 @@
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Class1.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.3.0" />
@@ -32,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BA.Roslyn.AttributeRules.Tests.Rules\BA.Roslyn.AttributeRules.Tests.Rules.csproj" />
     <ProjectReference Include="..\BA.Roslyn.AttributeRules\BA.Roslyn.AttributeRules.csproj" />
   </ItemGroup>
 

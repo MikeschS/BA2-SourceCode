@@ -1,12 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BA.Roslyn.AttributeRules.Core.Rules
+namespace BA.Roslyn.AttributeRules.Abstractions
 {
-    internal interface IRule
+    public interface IRule
     {
+        void Init(AttributeRuleInitialisationContext context);
+
         void Check(AttributeRuleExecutionContext context);
 
         SymbolKind TargetSymbolKind { get; }
