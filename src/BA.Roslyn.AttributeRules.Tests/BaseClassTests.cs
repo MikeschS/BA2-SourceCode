@@ -628,5 +628,38 @@ namespace Powermatch2.Application.Analyzers.Test
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));
 		}
+
+        [Fact]
+        public async Task ZZZZLastTest()
+        {
+            AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
+@"SymbolKind = Microsoft.CodeAnalysis.SymbolKind.NamedType;
+
+RuleDelegate = context => 
+{
+	var symbol = context.Symbol as INamedTypeSymbol;
+
+	if(symbol.Name.Contains(""Test""))
+	{
+		context.EmitMessage(""Fuck this shit."");
 	}
+};
+");
+
+            var matchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class MatchTestCommand
+	{
+	}
+}";
+
+            await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
+                new string[] { matchTestCase },
+                invalidConfig);
+        }
+    }
 }

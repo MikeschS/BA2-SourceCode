@@ -7,7 +7,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
 {
     internal interface IRule
     {
-        RuleResult Check(ISymbol symbol);
+        void Check(AttributeRuleExecutionContext context);
 
         SymbolKind TargetSymbolKind { get; }
     }

@@ -21,13 +21,17 @@ namespace BA.Roslyn.AttributeRules.Core
         {
             foreach (var rule in this.rules.Where(t => t.TargetSymbolKind == symbolKind))
             {
-                var result = rule.Check(context.Symbol);
+                var executionContext = new AttributeRuleExecutionContext() { Compilation = context.Compilation, Symbol = context.Symbol };
+                rule.Check(executionContext);
 
-                if (!result.IsSuccess)
+                if (executionContext.Messages.Any())
                 {
-                    var diagnostic = Diagnostic.Create(AttributeDiagnostics.AttributeConventionNotMet, context.Symbol.Locations.FirstOrDefault(), result.ErrorMessage);
+                    foreach (var message in executionContext.Messages)
+                    {
+                        var diagnostic = Diagnostic.Create(AttributeDiagnostics.AttributeConventionNotMet, context.Symbol.Locations.FirstOrDefault(), message);
 
-                    context.ReportDiagnostic(diagnostic);
+                        context.ReportDiagnostic(diagnostic);
+                    }
                 }
             }
         }

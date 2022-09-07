@@ -26,40 +26,6 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             return this;
         }
 
-        public RuleResult Check(ISymbol symbol)
-        {
-            if (symbol.Kind != TargetSymbolKind)
-            {
-                return RuleResult.Success();
-            }
-
-            var typeSymbol = symbol as INamedTypeSymbol;
-
-            if (typeSymbol == null)
-            {
-                return RuleResult.Success();
-            }
-
-            if (!analyzeabstractClasses && typeSymbol.IsAbstract)
-            {
-                return RuleResult.Success();
-            }
-
-            if (!MatchesSelector(typeSymbol, selector))
-            {
-                return RuleResult.Success();
-            }
-
-            var attributeTypes = typeSymbol.GetAttributes().Select(t => t.AttributeClass).Where(t => t != null).Select(t => t!).ToList();
-
-            if (attributeTypes.Any(t => SymbolEqualityComparer.Default.Equals(t, requiredAttributeClass)))
-            {
-                return RuleResult.Success();
-            }
-
-            return RuleResult.Fail($"Class misses the {requiredAttributeClass.Name} attribute");
-        }
-
         private bool MatchesSelector(INamedTypeSymbol typeSymbol, INamedTypeSymbol baseSymbol)
         {
             var currentSymbol = typeSymbol;
@@ -126,6 +92,43 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             }
 
             return false;
+        }
+
+        public void Check(AttributeRuleExecutionContext context)
+        {
+            var symbol = context.Symbol;
+
+            if (symbol.Kind != TargetSymbolKind)
+            {
+                return;
+            }
+
+            var typeSymbol = symbol as INamedTypeSymbol;
+
+            if (typeSymbol == null)
+            {
+                return;
+            }
+
+            if (!analyzeabstractClasses && typeSymbol.IsAbstract)
+            {
+                return;
+            }
+
+            if (!MatchesSelector(typeSymbol, selector))
+            {
+                return;
+            }
+
+            var attributeTypes = typeSymbol.GetAttributes().Select(t => t.AttributeClass).Where(t => t != null).Select(t => t!).ToList();
+
+            if (attributeTypes.Any(t => SymbolEqualityComparer.Default.Equals(t, requiredAttributeClass)))
+            {
+                return;
+            }
+
+            context.EmitMessage($"Class misses the {requiredAttributeClass.Name} attribute");
+            return;
         }
     }
 }

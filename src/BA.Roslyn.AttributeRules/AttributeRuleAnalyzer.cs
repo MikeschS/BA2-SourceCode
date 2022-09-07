@@ -2,7 +2,9 @@
 using BA.Roslyn.AttributeRules.Core;
 using BA.Roslyn.AttributeRules.Core.Rules;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -51,49 +53,55 @@ namespace BA.Roslyn.AttributeRules
 					return;
                 }
 
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.General);
-				options.Converters.Add(new RuleJsonConverter());
+				var globals = new ScriptGlobals();
+				CSharpScript.EvaluateAsync(text.ToString(), ScriptOptions.Default.WithReferences(typeof(SymbolKind).Assembly).WithImports("System", "Microsoft.CodeAnalysis"), globals: globals).Wait();
+
+				// TODO check if globals are provided!!
+				////var options = new JsonSerializerOptions(JsonSerializerDefaults.General);
+				////options.Converters.Add(new RuleJsonConverter());
 
 
-				AttributeRulesConfig? config = null; 
-				
-				try
-                {
-					config = JsonSerializer.Deserialize<AttributeRulesConfig>(text.ToString(), options);
-				}
-				catch (JsonException e)
-                {
-					var jsonExceptionDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfigJson, null, e.Message);
-					compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(jsonExceptionDiagnostic));
-					return;
-				}
+				////AttributeRulesConfig? config = null; 
 
-                if (config == null)
-                {
-					throw new InvalidOperationException("Config is null - this should not happen");
-                }
+				////try
+				////            {
+				////	config = JsonSerializer.Deserialize<AttributeRulesConfig>(text.ToString(), options);
+				////}
+				////catch (JsonException e)
+				////            {
+				////	var jsonExceptionDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfigJson, null, e.Message);
+				////	compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(jsonExceptionDiagnostic));
+				////	return;
+				////}
+
+				////            if (config == null)
+				////            {
+				////	throw new InvalidOperationException("Config is null - this should not happen");
+				////            }
 
 				var rules = new List<IRule>();
 
-                foreach (var ruleConfig in config.Rules)
-                {
-					var configBuilderResult = ruleConfig.Value.BuildRule(ruleConfig.Key, compilationContext.Compilation);
+				rules.Add(new CustomRule(globals.SymbolKind, globals.RuleDelegate));
 
-					if (configBuilderResult.Error != null)
-                    {
-						var missingFileDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfig, null, configBuilderResult.Error);
-						compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(missingFileDiagnostic));
+    ////            foreach (var ruleConfig in config.Rules)
+    ////            {
+				////	var configBuilderResult = ruleConfig.Value.BuildRule(ruleConfig.Key, compilationContext.Compilation);
 
-						continue;
-					}
+				////	if (configBuilderResult.Error != null)
+    ////                {
+				////		var missingFileDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfig, null, configBuilderResult.Error);
+				////		compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(missingFileDiagnostic));
 
-					if (configBuilderResult.Rule == null)
-                    {
-						throw new InvalidOperationException();
-                    }
+				////		continue;
+				////	}
 
-					rules.Add(configBuilderResult.Rule);
-				}
+				////	if (configBuilderResult.Rule == null)
+    ////                {
+				////		throw new InvalidOperationException();
+    ////                }
+
+				////	rules.Add(configBuilderResult.Rule);
+				////}
 
 				var analyzer = new RuleAnalyzer(rules);
 
