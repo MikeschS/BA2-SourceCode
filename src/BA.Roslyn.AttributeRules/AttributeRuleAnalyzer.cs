@@ -39,126 +39,26 @@ namespace BA.Roslyn.AttributeRules
 
 			context.RegisterCompilationStartAction(compilationContext =>
 			{
-                var file = compilationContext.Options.AdditionalFiles.FirstOrDefault(t => Path.GetFileName(t.Path) == "attributeRules.json");
+                var attribute = compilationContext.Compilation.Assembly.GetAttributes().First();
 
-                if (file == null)
-                {
-					var missingFileDiagnostic = Diagnostic.Create(AttributeDiagnostics.MissingRuleConfigFile, null);
-					compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(missingFileDiagnostic));
+                var identity = attribute.AttributeClass.ContainingAssembly.Identity;
+                var idName = identity.GetDisplayName();
+                var assembly = Assembly.Load(idName);
 
-                    return;
-                }
+                var metadataName = attribute.AttributeClass.ToDisplayString();
 
-                var text = file.GetText(compilationContext.CancellationToken);
+                var type = assembly.ExportedTypes.FirstOrDefault(t => t.FullName == metadataName);
 
-                if (text == null)
-                {
-					var missingRuleConfigText = Diagnostic.Create(AttributeDiagnostics.MissingRuleConfigText, null);
-					compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(missingRuleConfigText));
-
-					return;
-                }
+                var rule = (RuleBase)Activator.CreateInstance(type, Array.Empty<object>());
 
                 var rules = new List<RuleBase>();
 
-                var attribute = compilationContext.Compilation.Assembly.GetAttributes().First();
-                // TODO load assembly!
+                rules.Add(rule);
 
-                var rule = (RuleBase)Activator.CreateInstance(Type.GetType(attribute.AttributeClass.MetadataName), Array.Empty<object>());
-
-                try
-                {
-                    var references = new List<string>();
-                    var globals = new ScriptGlobals(reference => references.Add(reference), rule => rules.Add(rule));
-                    ////CSharpScript.EvaluateAsync(text.ToString(), ScriptOptions.Default.WithReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly).WithImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules.Core.Rules", "BA.Roslyn.AttributeRules"), globals: globals).Wait();
-
-                    ////var allReferences = compilationContext.Compilation.Assembly.Modules.SelectMany(t => t.ReferencedAssemblySymbols);
-
-                    ////var metadata = compilationContext.Compilation.GetMetadataReference(allReferences.First());
-
-                    // TODO get all with dependency on abstractions
-
-                    var ruleType = typeof(RuleBase).Assembly.GetName().Name;
-                    ////compilationContext.Compilation.Assembly.Modules.SelectMany(t => t.ReferencedAssemblySymbols).First().Modules.SelectMany(t => t.ReferencedAssemblySymbols);
-
-                    var dependentReferences = GetDependentAssemblies(compilationContext.Compilation.Assembly.Modules.SelectMany(t => t.ReferencedAssemblySymbols));
-
-                    var targets = dependentReferences.Select(t => compilationContext.Compilation.GetMetadataReference(t)).ToList();
-
-                    var input = text.Lines.Select(t => t.ToString()).ToList();
-
-                    ScriptState? state = null;
-                    foreach (var line in input)
-                    {
-                        // var tempReferences = compilationContext.Compilation.References.Where(t => references.Any(r => t.Display?.Contains(r) ?? false)).ToArray();
-
-                        if (state == null)
-                        {
-                            state = CSharpScript.RunAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(RuleBase).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules"), globals: globals).Result;
-                        }
-                        else
-                        {
-                            state = state.ContinueWithAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(RuleBase).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules")).Result;
-                        }
-                    }
-
-                    // CSharpScript.EvaluateAsync(text.ToString(), ScriptOptions.Default.AddReferences(compilationContext.Compilation.References.Where(t => t.Display.Contains("Rule"))).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules"), globals: globals).Wait();
-                }
-                catch (Exception e)
-                {
-                    // TODO diagnostic for exception
-                }
-
-                // TODO check if globals are provided!!
-                ////var options = new JsonSerializerOptions(JsonSerializerDefaults.General);
-                ////options.Converters.Add(new RuleJsonConverter());
-
-
-                ////AttributeRulesConfig? config = null; 
-
-                ////try
-                ////            {
-                ////	config = JsonSerializer.Deserialize<AttributeRulesConfig>(text.ToString(), options);
-                ////}
-                ////catch (JsonException e)
-                ////            {
-                ////	var jsonExceptionDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfigJson, null, e.Message);
-                ////	compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(jsonExceptionDiagnostic));
-                ////	return;
-                ////}
-
-                ////            if (config == null)
-                ////            {
-                ////	throw new InvalidOperationException("Config is null - this should not happen");
-                ////            }
-
-                ////rules.Add(new CustomRule(globals.SymbolKind, globals.RuleDelegate));
-
-                ////            foreach (var ruleConfig in config.Rules)
-                ////            {
-                ////	var configBuilderResult = ruleConfig.Value.BuildRule(ruleConfig.Key, compilationContext.Compilation);
-
-                ////	if (configBuilderResult.Error != null)
-                ////                {
-                ////		var missingFileDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfig, null, configBuilderResult.Error);
-                ////		compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(missingFileDiagnostic));
-
-                ////		continue;
-                ////	}
-
-                ////	if (configBuilderResult.Rule == null)
-                ////                {
-                ////		throw new InvalidOperationException();
-                ////                }
-
-                ////	rules.Add(configBuilderResult.Rule);
-                ////}
-                ///
-
-                foreach (var rule in rules)
+                foreach (var rule2 in rules)
                 {
                     var executionContext = new AttributeRuleInitialisationContext() { Compilation = compilationContext.Compilation };
-                    rule.Init(executionContext);
+                    rule2.Init(executionContext);
 
                     if (executionContext.Messages.Any())
                     {

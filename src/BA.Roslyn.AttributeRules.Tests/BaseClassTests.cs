@@ -689,10 +689,12 @@ namespace Powermatch2.Application.Analyzers.Test
 
 			var assemblyAttribute =
 @"using BA.Roslyn.AttributeRules.Tests.Rules;
-[assembly: MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Test.RequiredAttribute"", true)]
+[assembly: SimpleRule()]
 ";
 
-            await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
+			//// [assembly: MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Test.RequiredAttribute"", true)]
+
+			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 			new string[] { testCase, intermediateClass, baseClass, requiredAttribute, assemblyAttribute },
                 null, Array.Empty<DiagnosticResult>(), new[] { typeof(MyCustomRule).Assembly } );
         }

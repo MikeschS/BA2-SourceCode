@@ -19,7 +19,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             this.requiredAttributeClass = requiredAttributeClass;
         }
 
-        public SymbolKind TargetSymbolKind => SymbolKind.NamedType;
+        public override SymbolKind TargetSymbolKind => SymbolKind.NamedType;
 
         public ClassRequiresAttributeRule WithAnalyzeAbstractClasses(bool analyzeAbstractClasses)
         {
@@ -95,7 +95,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             return false;
         }
 
-        public void Check(AttributeRuleExecutionContext context)
+        public override void Check(AttributeRuleExecutionContext context)
         {
             var symbol = context.Symbol;
 
@@ -132,7 +132,7 @@ namespace BA.Roslyn.AttributeRules.Core.Rules
             return;
         }
 
-        public void Init(AttributeRuleInitialisationContext context)
+        public override void Init(AttributeRuleInitialisationContext context)
         {
         }
     }
