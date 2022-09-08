@@ -59,7 +59,12 @@ namespace BA.Roslyn.AttributeRules
 					return;
                 }
 
-                var rules = new List<IRule>();
+                var rules = new List<RuleBase>();
+
+                var attribute = compilationContext.Compilation.Assembly.GetAttributes().First();
+                // TODO load assembly!
+
+                var rule = (RuleBase)Activator.CreateInstance(Type.GetType(attribute.AttributeClass.MetadataName), Array.Empty<object>());
 
                 try
                 {
@@ -73,7 +78,7 @@ namespace BA.Roslyn.AttributeRules
 
                     // TODO get all with dependency on abstractions
 
-                    var ruleType = typeof(IRule).Assembly.GetName().Name;
+                    var ruleType = typeof(RuleBase).Assembly.GetName().Name;
                     ////compilationContext.Compilation.Assembly.Modules.SelectMany(t => t.ReferencedAssemblySymbols).First().Modules.SelectMany(t => t.ReferencedAssemblySymbols);
 
                     var dependentReferences = GetDependentAssemblies(compilationContext.Compilation.Assembly.Modules.SelectMany(t => t.ReferencedAssemblySymbols));
@@ -89,11 +94,11 @@ namespace BA.Roslyn.AttributeRules
 
                         if (state == null)
                         {
-                            state = CSharpScript.RunAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(IRule).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules"), globals: globals).Result;
+                            state = CSharpScript.RunAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(RuleBase).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules"), globals: globals).Result;
                         }
                         else
                         {
-                            state = state.ContinueWithAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(IRule).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules")).Result;
+                            state = state.ContinueWithAsync(line, ScriptOptions.Default.AddReferences(targets).AddReferences(typeof(SymbolKind).Assembly, typeof(ScriptGlobals).Assembly, typeof(RuleBase).Assembly).AddImports("System", "Microsoft.CodeAnalysis", "BA.Roslyn.AttributeRules")).Result;
                         }
                     }
 
@@ -182,7 +187,7 @@ namespace BA.Roslyn.AttributeRules
             {
                 var references = item.Modules.SelectMany(t => t.ReferencedAssemblySymbols);
 
-                if (references.Any(t => t.Name.Contains(typeof(IRule).Assembly.GetName().Name)))
+                if (references.Any(t => t.Name.Contains(typeof(RuleBase).Assembly.GetName().Name)))
                 {
                     yield return item;
                 }

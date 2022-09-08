@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BA.Roslyn.AttributeRules.Core.Rules
 {
-    internal class ClassRequiresAttributeRule : IRule
+    internal class ClassRequiresAttributeRule : RuleBase
     {
         private INamedTypeSymbol selector;
         private INamedTypeSymbol requiredAttributeClass;

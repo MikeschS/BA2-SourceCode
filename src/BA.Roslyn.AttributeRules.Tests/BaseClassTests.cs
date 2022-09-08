@@ -643,11 +643,6 @@ namespace Powermatch2.Application.Analyzers.Test
         [Fact]
         public async Task ZZZZLastTest()
         {
-            AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
-@"using BA.Roslyn.AttributeRules.Tests.Rules;
-
-AddRule(new MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Test.RequiredAttribute"", true));");
-
             var testCase =
             @"namespace AttributeRules.Test
 {
@@ -692,9 +687,14 @@ AddRule(new MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Tes
 	}
 }";
 
+			var assemblyAttribute =
+@"using BA.Roslyn.AttributeRules.Tests.Rules;
+[assembly: MyCustomRule(""AttributeRules.Test.MyCommand"", ""AttributeRules.Test.RequiredAttribute"", true)]
+";
+
             await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
-			new string[] { testCase, intermediateClass, baseClass, requiredAttribute },
-                invalidConfig, Array.Empty<DiagnosticResult>(), new[] { typeof(MyCustomRule).Assembly } );
+			new string[] { testCase, intermediateClass, baseClass, requiredAttribute, assemblyAttribute },
+                null, Array.Empty<DiagnosticResult>(), new[] { typeof(MyCustomRule).Assembly } );
         }
     }
 }

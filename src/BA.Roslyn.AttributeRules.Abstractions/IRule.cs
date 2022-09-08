@@ -3,12 +3,13 @@ using System;
 
 namespace BA.Roslyn.AttributeRules.Abstractions
 {
-    public interface IRule
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+    public abstract class RuleBase : Attribute
     {
-        void Init(AttributeRuleInitialisationContext context);
+        public abstract void Init(AttributeRuleInitialisationContext context);
 
-        void Check(AttributeRuleExecutionContext context);
+        public abstract void Check(AttributeRuleExecutionContext context);
 
-        SymbolKind TargetSymbolKind { get; }
+        public abstract SymbolKind TargetSymbolKind { get; }
     }
 }

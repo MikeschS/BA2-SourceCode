@@ -8,7 +8,7 @@ namespace BA.Roslyn.AttributeRules.Configuration
 {
     internal class RuleBuildResult
     {
-        private RuleBuildResult(IRule rule)
+        private RuleBuildResult(RuleBase rule)
         {
             Rule = rule;
         }
@@ -18,11 +18,11 @@ namespace BA.Roslyn.AttributeRules.Configuration
             Error = error;
         }
 
-        public IRule? Rule { get; }
+        public RuleBase? Rule { get; }
 
         public string? Error { get; }
 
-        internal static RuleBuildResult Success(IRule rule)
+        internal static RuleBuildResult Success(RuleBase rule)
         {
             return new RuleBuildResult(rule);
         }

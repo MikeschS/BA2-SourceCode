@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace BA.Roslyn.AttributeRules.Tests.Rules
 {
-    public class MyCustomRule : IRule
+    // TODO!!!
+    public class MyCustomRule : RuleBase
     {
         private readonly string selector1;
         private readonly string attribute;
@@ -20,9 +21,9 @@ namespace BA.Roslyn.AttributeRules.Tests.Rules
             this.analyzeabstractClasses = analyzeAbstractClasses;
         }
 
-        public SymbolKind TargetSymbolKind => SymbolKind.NamedType;
+        public override SymbolKind TargetSymbolKind => SymbolKind.NamedType;
 
-        public void Check(AttributeRuleExecutionContext context)
+        public override void Check(AttributeRuleExecutionContext context)
         {
             var symbol = context.Symbol;
 
@@ -59,7 +60,7 @@ namespace BA.Roslyn.AttributeRules.Tests.Rules
             return;
         }
 
-        public void Init(AttributeRuleInitialisationContext context)
+        public override void Init(AttributeRuleInitialisationContext context)
         {
             var selector = context.Compilation.GetTypeByMetadataName(selector1);
             var attributeClass = context.Compilation.GetTypeByMetadataName(attribute);

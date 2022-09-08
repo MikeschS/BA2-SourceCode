@@ -9,9 +9,9 @@ namespace BA.Roslyn.AttributeRules
     public class ScriptGlobals
     {
         private readonly Action<string> addReference;
-        private readonly Action<IRule> addRule;
+        private readonly Action<RuleBase> addRule;
 
-        public ScriptGlobals(Action<string> addReference, Action<IRule> addRule)
+        public ScriptGlobals(Action<string> addReference, Action<RuleBase> addRule)
         {
             this.addReference = addReference;
             this.addRule = addRule;
@@ -19,7 +19,7 @@ namespace BA.Roslyn.AttributeRules
 
         public void AddReference(string reference) => addReference(reference);
 
-        public void AddRule(IRule rule) => addRule(rule);
+        public void AddRule(RuleBase rule) => addRule(rule);
     }
 
     public class AttributeRuleExecutionContext

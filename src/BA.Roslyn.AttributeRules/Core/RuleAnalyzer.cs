@@ -11,9 +11,9 @@ namespace BA.Roslyn.AttributeRules.Core
 {
     public class RuleAnalyzer
     {
-        private readonly List<IRule> rules;
+        private readonly List<RuleBase> rules;
 
-        internal RuleAnalyzer(IEnumerable<IRule> rules)
+        internal RuleAnalyzer(IEnumerable<RuleBase> rules)
         {
             this.rules = rules.ToList();
         }
