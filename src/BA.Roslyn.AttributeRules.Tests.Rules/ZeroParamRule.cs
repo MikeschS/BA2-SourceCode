@@ -6,21 +6,18 @@ using System.Text;
 
 namespace BA.Roslyn.AttributeRules.Tests.Rules
 {
-    public class SimpleRule : RuleBase
+    public class ZeroParamRule : RuleBase
     {
-        public SimpleRule(bool param)
-        {
-
-        }
-
-        public override SymbolKind TargetSymbolKind => throw new NotImplementedException();
+        public override SymbolKind TargetSymbolKind => SymbolKind.NamedType;
 
         public override void Check(AttributeRuleExecutionContext context)
         {
+            context.EmitMessage("ZeroParamRule");
         }
 
         public override void Init(AttributeRuleInitialisationContext context)
         {
+            context.EmitMessage("ZeroParamRule");
         }
     }
 }

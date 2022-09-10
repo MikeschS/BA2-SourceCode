@@ -14,7 +14,7 @@ namespace BA.Roslyn.AttributeRules.Tests.Rules
         private INamedTypeSymbol requiredAttributeClass;
         private bool analyzeabstractClasses;
 
-        public MyCustomRule(string selector, string attribute, bool analyzeAbstractClasses = false)
+        public MyCustomRule(string selector, string attribute, bool analyzeAbstractClasses)
         {
             selector1 = selector;
             this.attribute = attribute;

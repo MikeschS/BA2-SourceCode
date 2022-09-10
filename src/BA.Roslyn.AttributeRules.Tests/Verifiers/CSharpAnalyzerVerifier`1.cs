@@ -25,9 +25,9 @@
 			=> CSharpAnalyzerVerifier<TAnalyzer, XUnitVerifier>.Diagnostic(descriptor);
 
 		/// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.VerifyAnalyzerAsync(string, DiagnosticResult[])"/>
-		public static async Task VerifyAnalyzerAsync(IEnumerable<string> sources, AdditionalDocument? additionalDocument, IEnumerable<DiagnosticResult>? expected = null, IEnumerable<Assembly>? references = null)
+		public static async Task VerifyAnalyzerAsync(IEnumerable<string> sources, IEnumerable<DiagnosticResult>? expected = null, IEnumerable<Assembly>? references = null)
 		{
-			var test = new Test(sources, additionalDocument);
+			var test = new Test(sources);
 
 			foreach (var reference in references ?? new Assembly[0])
 			{
@@ -35,7 +35,7 @@
             }
 
 
-			test.ExpectedDiagnostics.AddRange(expected);
+			test.ExpectedDiagnostics.AddRange(expected ?? Array.Empty<DiagnosticResult>());
 			await test.RunAsync(CancellationToken.None);
 		}
     }

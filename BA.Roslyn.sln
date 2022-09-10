@@ -21,9 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BA.Roslyn.AttributeRules", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BA.Roslyn.AttributeRules.Tests", "src\BA.Roslyn.AttributeRules.Tests\BA.Roslyn.AttributeRules.Tests.csproj", "{44FBC732-8436-40EF-ABB4-F2772685D3EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.AttributeRules.Abstractions", "src\BA.Roslyn.AttributeRules.Abstractions\BA.Roslyn.AttributeRules.Abstractions.csproj", "{46F3BFCF-0E1D-4769-92AC-BB8077892D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BA.Roslyn.AttributeRules.Abstractions", "src\BA.Roslyn.AttributeRules.Abstractions\BA.Roslyn.AttributeRules.Abstractions.csproj", "{46F3BFCF-0E1D-4769-92AC-BB8077892D46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.AttributeRules.Tests.Rules", "src\BA.Roslyn.AttributeRules.Tests.Rules\BA.Roslyn.AttributeRules.Tests.Rules.csproj", "{A1E33568-1110-4AA0-9811-734D759EF3E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BA.Roslyn.AttributeRules.Tests.Rules", "src\BA.Roslyn.AttributeRules.Tests.Rules\BA.Roslyn.AttributeRules.Tests.Rules.csproj", "{A1E33568-1110-4AA0-9811-734D759EF3E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.AttributeRules.IntegrationTests", "src\BA.Roslyn.AttributeRules.IntegrationTests\BA.Roslyn.AttributeRules.IntegrationTests.csproj", "{695E5563-28F9-4FCA-BF4C-03748B80B71F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BA.Roslyn.AttributeRules.IntegrationTests.Rules", "src\BA.Roslyn.AttributeRules.IntegrationTests.Rules\BA.Roslyn.AttributeRules.IntegrationTests.Rules.csproj", "{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +71,14 @@ Global
 		{A1E33568-1110-4AA0-9811-734D759EF3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1E33568-1110-4AA0-9811-734D759EF3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1E33568-1110-4AA0-9811-734D759EF3E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{695E5563-28F9-4FCA-BF4C-03748B80B71F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{695E5563-28F9-4FCA-BF4C-03748B80B71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{695E5563-28F9-4FCA-BF4C-03748B80B71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{695E5563-28F9-4FCA-BF4C-03748B80B71F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +93,8 @@ Global
 		{44FBC732-8436-40EF-ABB4-F2772685D3EB} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
 		{46F3BFCF-0E1D-4769-92AC-BB8077892D46} = {A7E6C889-D97E-4AC8-9463-AAAE3E104053}
 		{A1E33568-1110-4AA0-9811-734D759EF3E1} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
+		{695E5563-28F9-4FCA-BF4C-03748B80B71F} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
+		{A52EDD2D-89C2-40DB-B91F-91FDAE2C5498} = {1B4D6D1F-BEDC-490A-AD58-77A50F0E5C9B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27E887C4-1106-402A-837A-0CA3CE9B61A0}

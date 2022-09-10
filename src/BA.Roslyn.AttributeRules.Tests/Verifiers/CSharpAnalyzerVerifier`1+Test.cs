@@ -9,7 +9,9 @@ namespace BA.Roslyn.AttributeRules.Tests.Verifiers
     using System.Text;
     using System.Threading;
 	using System.Threading.Tasks;
-	using Microsoft.CodeAnalysis;
+    using BA.Roslyn.AttributeRules.Abstractions;
+    using BA.Roslyn.AttributeRules.Tests.Rules;
+    using Microsoft.CodeAnalysis;
 	using Microsoft.CodeAnalysis.CSharp.Testing;
 	using Microsoft.CodeAnalysis.Diagnostics;
 	using Microsoft.CodeAnalysis.Testing;
@@ -23,10 +25,10 @@ namespace BA.Roslyn.AttributeRules.Tests.Verifiers
 	{
 		public class Test : CSharpAnalyzerTest<TAnalyzer, XUnitVerifier>
 		{
-			public Test(IEnumerable<string> sources, AdditionalDocument? additionalDocument = null)
+			public Test(IEnumerable<string> sources)
 			{
 				ReferenceAssemblies = Net.Net60;
-                // TestState.AdditionalReferences.Add(typeof(System.Boolean).Assembly);
+                TestState.AdditionalReferences.Add(typeof(RuleBase).Assembly);
 
                 foreach (var source in sources)
                 {
@@ -44,11 +46,6 @@ namespace BA.Roslyn.AttributeRules.Tests.Verifiers
 							compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
 								compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
 							solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
-						}
-
-						if (additionalDocument != null)
-                        {
-							solution = solution.AddAdditionalDocument(DocumentId.CreateNewId(projectId), additionalDocument.Name, SourceText.From(additionalDocument.Source, Encoding.UTF8));
 						}
 					}
 

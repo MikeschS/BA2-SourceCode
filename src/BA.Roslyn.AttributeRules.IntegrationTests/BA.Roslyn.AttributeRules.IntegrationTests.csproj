@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>Latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BA.Roslyn.AttributeRules.IntegrationTests.Rules\BA.Roslyn.AttributeRules.IntegrationTests.Rules.csproj" />
+    <ProjectReference Include="..\BA.Roslyn.AttributeRules\BA.Roslyn.AttributeRules.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+</Project>
