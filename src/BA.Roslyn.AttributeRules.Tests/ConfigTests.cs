@@ -100,7 +100,7 @@ namespace Powermatch2.Application.Analyzers.Test
 			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
 				new string[] { attributeSource, baseSource },
 				config,
-				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfigJson).WithArguments("Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 6 | BytePositionInLine: 1."));
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfigJson).WithArguments("Unexpected end of stream reached while parsing object in line 7 at position 1."));
 		}
 	}
 }

@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# Att001: Attribute convention not met
+dotnet_diagnostic.Att001.severity = error

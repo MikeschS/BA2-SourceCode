@@ -1,0 +1,13 @@
+{
+  "Rules": {
+    "TestRule": {
+      "Type": "ClassRequiresAttribute",
+      "AttributeType": {
+        "TypeName": "BA.Roslyn.AttributeRules.IntegrationTests.AttributeClass"
+      },
+      "Selector": {
+        "TypeName": "BA.Roslyn.AttributeRules.IntegrationTests.BaseClass"
+      }
+    }
+  }
+}

@@ -628,5 +628,11 @@ namespace Powermatch2.Application.Analyzers.Test
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan(6, 15, 6, 31).WithArguments("Class misses the RequiredAttribute attribute"),
 				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.AttributeConventionNotMet).WithSpan("/0/Test1.cs", 6, 15, 6, 33).WithArguments("Class misses the RequiredAttribute attribute"));
 		}
+
+		[Fact]
+		public async Task NotifiesWhenAttributeTypeDoesNotInheritFromAttribute()
+		{
+			Assert.True(false);
+		}
 	}
 }

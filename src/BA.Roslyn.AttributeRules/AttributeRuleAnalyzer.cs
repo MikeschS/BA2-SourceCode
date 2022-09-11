@@ -1,6 +1,7 @@
 ﻿using BA.Roslyn.AttributeRules.Configuration;
 using BA.Roslyn.AttributeRules.Core;
 using BA.Roslyn.AttributeRules.Core.Rules;
+using CompactJson;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System;
@@ -9,7 +10,6 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 
 namespace BA.Roslyn.AttributeRules
 {
@@ -51,17 +51,13 @@ namespace BA.Roslyn.AttributeRules
 					return;
                 }
 
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.General);
-				options.Converters.Add(new RuleJsonConverter());
-
-
 				AttributeRulesConfig? config = null; 
 				
 				try
                 {
-					config = JsonSerializer.Deserialize<AttributeRulesConfig>(text.ToString(), options);
+					config = Serializer.Parse<AttributeRulesConfig>(text.ToString());
 				}
-				catch (JsonException e)
+				catch (ParserException e)
                 {
 					var jsonExceptionDiagnostic = Diagnostic.Create(AttributeDiagnostics.InvalidRuleConfigJson, null, e.Message);
 					compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(jsonExceptionDiagnostic));
