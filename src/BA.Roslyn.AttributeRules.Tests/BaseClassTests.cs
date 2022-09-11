@@ -632,7 +632,69 @@ namespace Powermatch2.Application.Analyzers.Test
 		[Fact]
 		public async Task NotifiesWhenAttributeTypeDoesNotInheritFromAttribute()
 		{
-			Assert.True(false);
+			AdditionalDocument invalidConfig = new AdditionalDocument("attributeRules.json",
+@"{
+	""Rules"" : {
+		""TestRule"" : {
+			""Type"" : ""ClassRequiresAttribute"",
+			""AttributeType"": {
+				""TypeName"" : ""AttributeRules.Test.NoMatchTestCommand""
+			},
+			""Selector"" : {
+				""TypeName"" : ""AttributeRules.Test.IMyInterface`1""
+			}
+		}
+	}
+}");
+
+			var matchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class MatchTestCommand : IMyInterface<string>
+	{
+	}
+}";
+
+			var noMatchTestCase =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class NoMatchTestCommand : IMyInterface<int>
+	{
+	}
+}";
+
+			var @interface =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public interface IMyInterface<T>
+	{
+	}
+}";
+
+			var requiredAttribute =
+@"namespace AttributeRules.Test
+{
+	using System;
+	using System.Threading.Tasks;
+
+	public class RequiredAttribute : Attribute
+	{
+	}
+}";
+
+			await CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.VerifyAnalyzerAsync(
+				new string[] { matchTestCase, noMatchTestCase, @interface, requiredAttribute },
+				invalidConfig,
+				CSharpAnalyzerVerifier<AttributeRuleAnalyzer>.Diagnostic(AttributeDiagnostics.InvalidRuleConfig).WithArguments("Attribute type does not inherit from System.Attribute"));
 		}
 	}
 }

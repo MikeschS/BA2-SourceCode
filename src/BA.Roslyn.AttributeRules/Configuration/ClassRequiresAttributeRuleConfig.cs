@@ -40,9 +40,31 @@ namespace BA.Roslyn.AttributeRules.Configuration
                 return RuleBuildResult.Fail("Attribute type is not a class");
             }
 
+            if (!HasTransientBaseType(attributeClass, "System.Attribute"))
+            {
+                return RuleBuildResult.Fail("Attribute type does not inherit from System.Attribute");
+            }
+
             var rule = new ClassRequiresAttributeRule(selector, attributeClass).WithAnalyzeAbstractClasses(AnalyzeAbstractClasses);
 
             return RuleBuildResult.Success(rule);
+        }
+
+        private bool HasTransientBaseType(INamedTypeSymbol symbol, string baseTypeName)
+        {
+            var currentSymbol = symbol.BaseType;
+
+            while(currentSymbol != null)
+            {
+                if (currentSymbol.ToDisplayString() == baseTypeName)
+                {
+                    return true;
+                }
+
+                currentSymbol = currentSymbol.BaseType;
+            }
+
+            return false;
         }
     }
 }
