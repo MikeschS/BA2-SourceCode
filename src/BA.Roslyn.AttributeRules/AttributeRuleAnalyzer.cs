@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace BA.Roslyn.AttributeRules
 {
@@ -26,7 +25,7 @@ namespace BA.Roslyn.AttributeRules
 
 		public override void Initialize(AnalysisContext context)
 		{
-			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze);
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.ReportDiagnostics);
 			context.EnableConcurrentExecution();
 
 			context.RegisterCompilationStartAction(compilationContext =>
@@ -41,6 +40,8 @@ namespace BA.Roslyn.AttributeRules
                     return;
                 }
 
+				compilationContext.CancellationToken.ThrowIfCancellationRequested();
+
                 var text = file.GetText(compilationContext.CancellationToken);
 
                 if (text == null)
@@ -51,7 +52,9 @@ namespace BA.Roslyn.AttributeRules
 					return;
                 }
 
-				AttributeRulesConfig? config = null; 
+                compilationContext.CancellationToken.ThrowIfCancellationRequested();
+
+                AttributeRulesConfig? config = null; 
 				
 				try
                 {
@@ -63,6 +66,8 @@ namespace BA.Roslyn.AttributeRules
 					compilationContext.RegisterCompilationEndAction(context => context.ReportDiagnostic(jsonExceptionDiagnostic));
 					return;
 				}
+
+                compilationContext.CancellationToken.ThrowIfCancellationRequested();
 
                 if (config == null)
                 {
@@ -89,14 +94,18 @@ namespace BA.Roslyn.AttributeRules
                     }
 
 					rules.Add(configBuilderResult.Rule);
-				}
+
+                    compilationContext.CancellationToken.ThrowIfCancellationRequested();
+                }
 
 				var analyzer = new RuleAnalyzer(rules);
 
                 foreach (var symbolKind in rules.Select(t => t.TargetSymbolKind).Distinct())
                 {
 					compilationContext.RegisterSymbolAction(ctx => analyzer.AnalyzeContext(ctx, symbolKind), symbolKind);
-				}
+
+                    compilationContext.CancellationToken.ThrowIfCancellationRequested();
+                }
 			});
 		}
 	}

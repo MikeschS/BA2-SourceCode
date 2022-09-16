@@ -19,8 +19,11 @@ namespace BA.Roslyn.AttributeRules.Core
 
         internal void AnalyzeContext(SymbolAnalysisContext context, SymbolKind symbolKind)
         {
+            // TODO check for cancellationtoken
             foreach (var rule in this.rules.Where(t => t.TargetSymbolKind == symbolKind))
             {
+                context.CancellationToken.ThrowIfCancellationRequested();
+
                 var result = rule.Check(context.Symbol);
 
                 if (!result.IsSuccess)
