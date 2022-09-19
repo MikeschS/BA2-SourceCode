@@ -27,8 +27,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BA.Roslyn.Validation\BA.Roslyn.Validation.csproj" />
-  </ItemGroup>
-
 </Project>

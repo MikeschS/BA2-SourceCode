@@ -27,8 +27,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BA.Roslyn.CodeBlocks\BA.Roslyn.CodeBlocks.csproj" />
-  </ItemGroup>
-
 </Project>
