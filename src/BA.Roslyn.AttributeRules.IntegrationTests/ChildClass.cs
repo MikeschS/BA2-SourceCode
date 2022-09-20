@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BA.Roslyn.AttributeRules.IntegrationTests
 {
+    [AttributeClass]
     public class ChildClass : BaseClass
     {
     }
