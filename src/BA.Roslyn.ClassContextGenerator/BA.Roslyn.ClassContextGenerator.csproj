@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\BA.Roslyn.ClassContextGenerator.Abstractions\BA.Roslyn.ClassContextGenerator.Abstractions.csproj" />
+	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

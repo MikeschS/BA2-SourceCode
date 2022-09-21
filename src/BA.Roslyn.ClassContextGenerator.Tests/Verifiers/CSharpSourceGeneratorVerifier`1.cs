@@ -13,6 +13,7 @@ namespace BA.Roslyn.ClassContextGenerator.Tests.Verifiers
 	using BA.Roslyn.ClassContextGenerator.Abstractions;
 	using Microsoft.CodeAnalysis;
 	using Microsoft.CodeAnalysis.CSharp;
+	using Microsoft.CodeAnalysis.CSharp.Testing;
 	using Microsoft.CodeAnalysis.Testing;
 	using Microsoft.CodeAnalysis.Testing.Verifiers;
 	using static Microsoft.CodeAnalysis.Testing.ReferenceAssemblies;
@@ -38,7 +39,7 @@ namespace BA.Roslyn.ClassContextGenerator.Tests.Verifiers
 				});
 			}
 
-			private static readonly LanguageVersion DefaultLanguageVersion =
+            private static readonly LanguageVersion DefaultLanguageVersion =
 			Enum.TryParse("Default", out LanguageVersion version) ? version : LanguageVersion.CSharp6;
 
 			protected override IEnumerable<ISourceGenerator> GetSourceGenerators()

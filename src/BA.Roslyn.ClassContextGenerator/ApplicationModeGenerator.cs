@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading;
+    using BA.Roslyn.AttributeRules;
     using BA.Roslyn.ClassContextGenerator.Abstractions;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -38,20 +39,20 @@
             var messageTypeProvider = context.CompilationProvider
                 .SelectMany(GetMessageTypes);
 
-            var resultProvider = messageTypeProvider.Combine(messageUsagesProvider.Collect()).Select((t, cancellationToken) => new GeneratorInput { MessageType = t.Left.MessageType, MessageUsages = t.Right });
+            var resultProvider = messageTypeProvider.Combine(messageUsagesProvider.Collect()).Select((t, cancellationToken) => new GeneratorInput { ClassType = t.Left.MessageType, MessageUsages = t.Right });
 
             context.RegisterSourceOutput(resultProvider, GenerateOutput);
         }
 
         private void GenerateOutput(SourceProductionContext context, GeneratorInput input)
         {
-            var usages = input.MessageUsages.Where(t => SymbolEqualityComparer.Default.Equals(t.MessageType, input.MessageType)).ToList();
+            var usages = input.MessageUsages.Where(t => SymbolEqualityComparer.Default.Equals(t.ClassType, input.ClassType)).ToList();
 
             var missingApplicationTypes = usages.Where(t => t.ApplicationTypes.Length == 0).ToList();
 
             foreach (var errorType in missingApplicationTypes)
             {
-                var diagnostic = Diagnostic.Create(ruleDescription, errorType.UsageClass.Locations.First(), errorType.MessageType.Name);
+                var diagnostic = Diagnostic.Create(GeneratorDiagnostics.ApplicationModeNotDefined, errorType.ContainingClass.Locations.First(), errorType.ContainingClass.Name, errorType.ClassType.Name);
 
                 context.ReportDiagnostic(diagnostic);
             }
@@ -62,29 +63,28 @@
 
             var sb = new StringBuilder();
             sb.Append(
-            $@"namespace {input.MessageType.ContainingNamespace}
+            $@"namespace {input.ClassType.ContainingNamespace}
 {{
 	[BA.Roslyn.ClassContextGenerator.Abstractions.ApplicationMode({usageArguments})]
-	public partial class {input.MessageType.Name}
+	public partial class {input.ClassType.Name}
 	{{
 	}}
 }}");
 
-            context.AddSource($"{input.MessageType.Name}.g.cs", sb.ToString());
+            context.AddSource($"{input.ClassType.Name}.g.cs", sb.ToString());
         }
 
-        private MessageUsage GetApplicationModes(MessageReference messageReference, CancellationToken arg2)
+        private ClassContextUsage GetApplicationModes(ClassContextTypes messageReference, CancellationToken arg2)
         {
             var attributes = messageReference.ContaintingClassTypeSymbol.GetAttributes();
             var atributesArgumentsValues = attributes.Where(t => t.AttributeClass?.Name.StartsWith("ApplicationMode") ?? false).SelectMany(t => t.ConstructorArguments).Where(t => t.Kind == TypedConstantKind.Array).SelectMany(t => t.Values);
             var list = atributesArgumentsValues.Where(t => t.Type.Name == "ApplicationMode")
-                .Select(t => (ApplicationMode)t.Value).Where(t => t != null).Distinct().ToArray();
+                .Where(t => t.Value != null).Select(t => (ApplicationMode)t.Value!).Distinct().ToArray();
 
-            return new MessageUsage { MessageType = messageReference.ClassType, ApplicationTypes = list, UsageClass = messageReference.ContaintingClassTypeSymbol };
+            return new ClassContextUsage { ClassType = messageReference.ClassType, ApplicationTypes = list, ContainingClass = messageReference.ContaintingClassTypeSymbol };
         }
 
-        // TODO rebuild to CascadingError class
-        private static MessageReference? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
+        private static ClassContextTypes? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
         {
             var node = ctx.Node as BaseObjectCreationExpressionSyntax;
 
@@ -104,7 +104,7 @@
 
             if (createdType == null)
             {
-                throw new InvalidOperationException("Constructors should never return non-named types.");
+                throw new InvalidOperationException("Constructors should never have null ReceiverTypes.");
             }
 
             if (!HasBase(createdType, "BA.Roslyn.ClassContextGenerator.Abstractions.BaseClass"))
@@ -126,7 +126,7 @@
                 return null;
             }
 
-            return new MessageReference { ContaintingClassTypeSymbol = classDeclarationTypeSymbol, ClassType = createdType };
+            return new ClassContextTypes { ContaintingClassTypeSymbol = classDeclarationTypeSymbol, ClassType = createdType };
         }
 
         private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
@@ -183,27 +183,27 @@
             return false;
         }
 
-        private struct MessageReference
+        private struct ClassContextTypes
         {
             public INamedTypeSymbol ClassType { get; set; }
 
             public INamedTypeSymbol ContaintingClassTypeSymbol { get; set; }
         }
 
-        private struct MessageUsage
+        private struct ClassContextUsage
         {
-            public INamedTypeSymbol MessageType { get; set; }
+            public INamedTypeSymbol ClassType { get; set; }
 
-            public INamedTypeSymbol UsageClass { get; set; }
+            public INamedTypeSymbol ContainingClass { get; set; }
 
             public ApplicationMode[] ApplicationTypes { get; set; }
         }
 
         private struct GeneratorInput
         {
-            public INamedTypeSymbol MessageType { get; set; }
+            public INamedTypeSymbol ClassType { get; set; }
 
-            public ImmutableArray<MessageUsage> MessageUsages { get; set; }
+            public ImmutableArray<ClassContextUsage> MessageUsages { get; set; }
         }
 
         private struct MessageTypeOutput

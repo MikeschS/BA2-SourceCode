@@ -16,4 +16,8 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" PrivateAssets="all" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" />
+	</ItemGroup>
+
 </Project>
