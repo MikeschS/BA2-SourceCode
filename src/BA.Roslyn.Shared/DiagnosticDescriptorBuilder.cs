@@ -17,6 +17,8 @@ namespace BA.Roslyn.Shared
 
         private string Description { get; set; }
 
+        private DiagnosticSeverity Severity { get; set; } = DiagnosticSeverity.Warning;
+
         public DiagnosticDescriptorBuilder WithDiagnosticId(string id)
         {
             DiagnosticId = id;
@@ -47,6 +49,12 @@ namespace BA.Roslyn.Shared
             return this;
         }
 
+        public DiagnosticDescriptorBuilder WithSeverity(DiagnosticSeverity severity)
+        {
+            Severity = severity;
+            return this;
+        }
+
         public DiagnosticDescriptor Build()
         {
             if (DiagnosticId == null ||
@@ -57,7 +65,7 @@ namespace BA.Roslyn.Shared
                 throw new InvalidOperationException("Configuration is missing");
             }
 
-            return new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+            return new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, Severity, isEnabledByDefault: true, description: Description);
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BA.Roslyn.ClassContextGenerator.Abstractions\BA.Roslyn.ClassContextGenerator.Abstractions.csproj" />
+    <ProjectReference Include="..\BA.Roslyn.ClassContextGenerator\BA.Roslyn.ClassContextGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+</Project>

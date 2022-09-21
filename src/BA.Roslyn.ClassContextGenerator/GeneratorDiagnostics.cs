@@ -13,6 +13,8 @@ namespace BA.Roslyn.AttributeRules
             .WithCategory("DomainConvention")
             .WithDiagnosticId("CCG001")
             .WithMessageFormat("The class '{0}' uses the class '{1}', but does not define the current application mode.")
-            .WithDescription("Class requires specification of the ApplicationMode-Attribute.").Build();
+            .WithDescription("Class requires specification of the ApplicationMode-Attribute.")
+            .WithSeverity(DiagnosticSeverity.Error)
+            .Build();
     }
 }

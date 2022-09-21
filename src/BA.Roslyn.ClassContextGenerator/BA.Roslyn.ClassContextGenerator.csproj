@@ -17,8 +17,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BA.Roslyn.ClassContextGenerator.Abstractions\BA.Roslyn.ClassContextGenerator.Abstractions.csproj" />
-	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" />
+	  <ProjectReference Include="..\BA.Roslyn.ClassContextGenerator.Abstractions\BA.Roslyn.ClassContextGenerator.Abstractions.csproj" PrivateAssets="all" OutputItemType="Analyzer"/>
+	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" PrivateAssets="all" OutputItemType="Analyzer"/>
 	</ItemGroup>
 
 </Project>
