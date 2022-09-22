@@ -28,16 +28,19 @@
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             var messageReferenceProvider = context.SyntaxProvider.CreateSyntaxProvider(
-                predicate: static (s, _) => IsSyntaxTargetForGeneration(s),
-                transform: static (ctx, cancellationToken) => GetSemanticTargetForGeneration(ctx, cancellationToken))
+                predicate: static (s, _) => IsSyntaxForTargetUsage(s),
+                transform: static (ctx, cancellationToken) => GetSemanticTargetForTargetUsage(ctx, cancellationToken))
                 .Where(t => t is not null)
-                .Select((t, _) => t!.Value);
+                .Select((t, _) => t!.Value).WithComparer(new ClassContextTypesComparer());
 
             var messageUsagesProvider = messageReferenceProvider
-                .Select(GetApplicationModes);
+                .Select(GetApplicationModes).WithComparer(new ClassContextUsageComparer());
 
-            var messageTypeProvider = context.CompilationProvider
-                .SelectMany(GetMessageTypes);
+            var messageTypeProvider = context.SyntaxProvider.CreateSyntaxProvider(
+                predicate: static (s, _) => IsSyntaxForType(s),
+                transform: static (ctx, cancellationToken) => GetSemanticTargetForTargetType(ctx, cancellationToken))
+                .Where(t => t is not null)
+                .Select((t, _) => t!.Value).WithComparer(new MessageTypeOutputComparer());
 
             var resultProvider = messageTypeProvider.Combine(messageUsagesProvider.Collect()).Select((t, cancellationToken) => new GeneratorInput { ClassType = t.Left.MessageType, MessageUsages = t.Right });
 
@@ -84,7 +87,7 @@
             return new ClassContextUsage { ClassType = messageReference.ClassType, ApplicationTypes = list, ContainingClass = messageReference.ContaintingClassTypeSymbol };
         }
 
-        private static ClassContextTypes? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
+        private static ClassContextTypes? GetSemanticTargetForTargetUsage(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
         {
             var node = ctx.Node as BaseObjectCreationExpressionSyntax;
 
@@ -129,9 +132,43 @@
             return new ClassContextTypes { ContaintingClassTypeSymbol = classDeclarationTypeSymbol, ClassType = createdType };
         }
 
-        private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
+        private static MessageTypeOutput? GetSemanticTargetForTargetType(GeneratorSyntaxContext ctx, CancellationToken cancellationToken)
+        {
+            var node = ctx.Node as ClassDeclarationSyntax;
+
+            if (node == null)
+            {
+                throw new InvalidOperationException("Other syntaxes are not supported in this method.");
+            }
+
+            var symbol = ctx.SemanticModel.GetDeclaredSymbol(node, cancellationToken);
+
+            if (symbol is not INamedTypeSymbol typeSymbol)
+            {
+                return null;
+            }
+
+            if(!HasBase(typeSymbol, "BA.Roslyn.ClassContextGenerator.Abstractions.BaseClass"))
+            {
+                return null;
+            }
+
+            return new MessageTypeOutput { MessageType = typeSymbol };
+        }
+
+        private static bool IsSyntaxForTargetUsage(SyntaxNode node)
         {
             if (node is BaseObjectCreationExpressionSyntax)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsSyntaxForType(SyntaxNode node)
+        {
+            if (node is ClassDeclarationSyntax)
             {
                 return true;
             }
@@ -190,6 +227,26 @@
             public INamedTypeSymbol ContaintingClassTypeSymbol { get; set; }
         }
 
+        private class ClassContextTypesComparer : EqualityComparer<ClassContextTypes>
+        {
+            public override bool Equals(ClassContextTypes x, ClassContextTypes y)
+            {
+                if (!x.ContaintingClassTypeSymbol.ToDisplayString().Equals(y.ContaintingClassTypeSymbol.ToDisplayString()))
+                {
+                    return false;
+                }
+
+                if (!x.ClassType.ToDisplayString().Equals(y.ClassType.ToDisplayString()))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override int GetHashCode(ClassContextTypes obj) => obj.GetHashCode();
+        }
+
         private struct ClassContextUsage
         {
             public INamedTypeSymbol ClassType { get; set; }
@@ -197,6 +254,31 @@
             public INamedTypeSymbol ContainingClass { get; set; }
 
             public ApplicationMode[] ApplicationTypes { get; set; }
+        }
+
+        private class ClassContextUsageComparer : EqualityComparer<ClassContextUsage>
+        {
+            public override bool Equals(ClassContextUsage x, ClassContextUsage y)
+            {
+                if (!x.ApplicationTypes.SequenceEqual(y.ApplicationTypes))
+                {
+                    return false;
+                }
+
+                if (!x.ContainingClass.ToDisplayString().Equals(y.ContainingClass.ToDisplayString()))
+                {
+                    return false;
+                }
+
+                if (!x.ClassType.ToDisplayString().Equals(y.ClassType.ToDisplayString()))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override int GetHashCode(ClassContextUsage obj) => obj.GetHashCode();
         }
 
         private struct GeneratorInput
@@ -209,6 +291,21 @@
         private struct MessageTypeOutput
         {
             public INamedTypeSymbol MessageType { get; set; }
+        }
+
+        private class MessageTypeOutputComparer : EqualityComparer<MessageTypeOutput>
+        {
+            public override bool Equals(MessageTypeOutput x, MessageTypeOutput y)
+            {
+                if (!x.MessageType.ToDisplayString().Equals(y.MessageType.ToDisplayString()))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override int GetHashCode(MessageTypeOutput obj) => obj.GetHashCode();
         }
     }
 }
