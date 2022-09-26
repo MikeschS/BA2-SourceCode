@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" />
+	  <ProjectReference Include="..\BA.Roslyn.Shared\BA.Roslyn.Shared.csproj" PrivateAssets="all" OutputItemType="Analyzer"/>
 	</ItemGroup>
 
 </Project>
